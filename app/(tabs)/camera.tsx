@@ -3,9 +3,24 @@ import { FontAwesome } from '@expo/vector-icons';
 import { CameraType, CameraView, useCameraPermissions } from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
 import { useRef, useState, useEffect } from 'react';
-import { Button, StyleSheet, Text, TouchableOpacity, View, ScrollView, SafeAreaView } from 'react-native';
+import { Button, StyleSheet, Text, TouchableOpacity, View, ToastAndroid} from 'react-native';
 
 export default function Camera() {
+  const showSaveToast = () => {
+    ToastAndroid.show('Photo saved to gallery.', ToastAndroid.SHORT);
+  }
+
+  const showRetakeToast = () => {
+    ToastAndroid.show('Photo discarded.', ToastAndroid.SHORT);
+  }
+  const showErrorToast = () => {
+    ToastAndroid.show('Photo cannot be saved. An error occured.', ToastAndroid.SHORT);
+  }
+
+  const showNotSavedToast = () => {
+    ToastAndroid.show('Photo not saved. Insufficient permission given.', ToastAndroid.SHORT);
+  }
+
   const ctr = useRef(0);
   const [facing, setFacing] = useState<CameraType>('back');
   const [permission, requestPermission] = useCameraPermissions();
@@ -54,21 +69,25 @@ export default function Camera() {
     if (!permissionResponse || permissionResponse.status !== 'granted') {
       const newPermission = await requestPermissionMedia();
       if (newPermission.status !== 'granted') {
-        alert('Permission denied. Cannot save photo.');
+        showNotSavedToast();
         return;
       }
     }
   
     try {
       await MediaLibrary.saveToLibraryAsync(photo.uri);
-      alert('✅ Photo saved to gallery');
+      showSaveToast();
       setPhoto(null);
     } catch (error) {
-      alert('❌ Failed to save photo: ' + error);
+      showErrorToast();
     }
   };
 
-  const handleRetakePhoto = () => setPhoto(null);
+  const handleRetakePhoto = () =>
+  {
+    showRetakeToast ();
+    setPhoto(null);
+  };
 
   if (photo) return <PhotoPreviewSection photo={photo} handleRetakePhoto={handleRetakePhoto} handleDownloadPhoto={handleDownloadPhoto} />
 
