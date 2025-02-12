@@ -2,10 +2,11 @@ import PhotoPreviewSection from '@/components/PhotoPreviewSection';
 import { FontAwesome } from '@expo/vector-icons';
 import { CameraType, CameraView, useCameraPermissions } from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import { Button, StyleSheet, Text, TouchableOpacity, View, ToastAndroid} from 'react-native';
 
 export default function Camera() {
+  
   const showSaveToast = () => {
     ToastAndroid.show('Photo saved to gallery.', ToastAndroid.SHORT);
   }
@@ -26,11 +27,9 @@ export default function Camera() {
   const [permission, requestPermission] = useCameraPermissions();
   const [photo, setPhoto] = useState<any>(null);
   const cameraRef = useRef<CameraView | null>(null);
-  const [albums, setAlbums] = useState<MediaLibrary.Album[]>([]);
   const [permissionResponse, requestPermissionMedia] = MediaLibrary.usePermissions();
 
   if (!permission) {
-
     return <View />;
   }
 

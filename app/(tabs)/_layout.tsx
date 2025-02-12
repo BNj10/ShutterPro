@@ -40,8 +40,8 @@ const _layout = () => {
                 tabBarIcon: ({ color }) => (
                     <Pressable onPress={() => router.push('/(tabs)/camera')}>
                         <FontAwesome name="camera" size={22} color={color} />
-                    </Pressable>
-                )
+                    </Pressable>),
+                    headerShown: false
             }}
         />
     </Tabs>
